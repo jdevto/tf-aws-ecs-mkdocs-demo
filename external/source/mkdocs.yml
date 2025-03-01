@@ -1,0 +1,14 @@
+site_name: MkDocs
+site_url: https://example.com/
+theme:
+  name: material
+
+nav:
+  - Home: index.md
+  - About: about.md
+
+markdown_extensions:
+  - toc:
+      permalink: "#"
+  - pymdownx.highlight
+  - pymdownx.superfences

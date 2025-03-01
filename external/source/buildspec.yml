@@ -1,0 +1,22 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Checking for Dockerfile...
+      - cat Dockerfile || echo "Dockerfile not found!"
+      - echo Logging into Amazon ECR...
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO
+
+  build:
+    commands:
+      - echo Building Docker image...
+      - ls
+      - docker build -t $ECR_REPO:latest -f Dockerfile .
+      - docker tag $ECR_REPO:latest $ECR_REPO:$CODEBUILD_RESOLVED_SOURCE_VERSION
+
+  post_build:
+    commands:
+      - echo Pushing Docker image...
+      - docker push $ECR_REPO:latest
+      - docker push $ECR_REPO:$CODEBUILD_RESOLVED_SOURCE_VERSION
